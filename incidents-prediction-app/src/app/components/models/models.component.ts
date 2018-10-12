@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as demoData from '../../shared/demo-data';
 import { Model } from 'src/app/shared/models/model';
+import { ModelsService } from 'src/app/services/models.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-models',
@@ -10,14 +12,18 @@ import { Model } from 'src/app/shared/models/model';
 
 
 export class ModelsComponent implements OnInit {
+  public models$: Observable<any>;
   public models: Model[];
   public selectedModel: Model;
 
-  constructor() { }
+  constructor( private ms: ModelsService ) { }
 
   ngOnInit() {
-    this.models = [demoData.bayesnetwork];
-    console.log(this.models);
+    this.models$ = this.ms.getModels()
+      .subscribe(data => {
+        this.models = data.models;
+        console.log(this.models);
+      });
   }
 
   changeModel($event) {

@@ -30,7 +30,7 @@
               <div class="col-sm-8 pull-right">
                 <select  class="form-control inline" [(ngModel)]='parameter.selectedValue'>
                     <option *ngFor="let value of parameter.values" [ngValue]='value'>
-                        {{ value }}
+                        {{ value.value }}
                     </option>
                 </select>
               </div>
