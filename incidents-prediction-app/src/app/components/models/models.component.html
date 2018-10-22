@@ -53,6 +53,20 @@
       <div class="card-body">
         <img class="image-center" *ngIf="resultImageBase64Path" [src]="resultImageBase64Path" alt="">
       </div>
+      <div class="card-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" *ngFor="let item of headerCSV">{{ item }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let line of linesCSV">
+              <th scope="row" *ngFor="let item of line">{{ item }}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>

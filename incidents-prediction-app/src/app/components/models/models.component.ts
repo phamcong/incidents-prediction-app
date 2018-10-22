@@ -17,7 +17,10 @@ export class ModelsComponent implements OnInit {
   public calledModel$: Observable<any>;
   public models: Model[];
   public selectedModel: Model;
-  public resultImageBase64Path: string;
+  public resultImageBase64Path: any;
+  public resultCSV: string[];
+  public headerCSV: string[];
+  public linesCSV: any[];
 
   constructor( private ms: ModelsService, private _sanitizer: DomSanitizer) { }
 
@@ -45,8 +48,12 @@ export class ModelsComponent implements OnInit {
 
     this.calledModel$ = this.ms.callPredictionModel(this.selectedModel['id'], selectedParameters)
     .subscribe(data => {
-      this.resultImageBase64Path = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + data['result']);
-      console.log('resultImageBase64Path: ', this.resultImageBase64Path);
+      console.log(data);
+      this.resultImageBase64Path = this._sanitizer.bypassSecurityTrustResourceUrl('data:image/jpg;base64,' + data['resultImageBase64']);
+      this.resultCSV = data['resultCSV'];
+      this.headerCSV = this.resultCSV['0'].split(', ');
+      const lines = this.resultCSV.slice(1);
+      this.linesCSV = lines.map(line => line.split(', '));
     });
   }
 }
