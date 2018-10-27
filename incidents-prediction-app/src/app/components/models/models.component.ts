@@ -14,9 +14,17 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 export class ModelsComponent implements OnInit {
   public models$: Observable<any>;
+  public systemsInfo$: Observable<any>;
   public calledModel$: Observable<any>;
+  public inputParameters$: Observable<any>;
+  public inputParameters: any[];
   public models: Model[];
+  public systems: any[];
   public selectedModel: Model;
+  public selectedSystem: any;
+  public selectedVsystem: any;
+  public selectedAppsystem: any;
+  public selectedVappsystem: any;
   public resultImageBase64Path: any;
   public resultCSV: string[];
   public headerCSV: string[];
@@ -25,11 +33,11 @@ export class ModelsComponent implements OnInit {
   constructor( private ms: ModelsService, private _sanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.models$ = this.ms.getModels()
-      .subscribe(data => {
-        this.models = data.models;
-        console.log(this.models);
-      });
+    this.systemsInfo$ = this.ms.getSystems()
+    .subscribe(data => {
+      this.systems = data['systems_info']['systems'];
+      console.log(this.systems);
+    });
   }
 
   changeModel($event) {
@@ -54,6 +62,32 @@ export class ModelsComponent implements OnInit {
       this.headerCSV = this.resultCSV['0'].split(', ');
       const lines = this.resultCSV.slice(1);
       this.linesCSV = lines.map(line => line.split(', '));
+    });
+  }
+
+  callModel() {
+    const ipParameter = {}
+    this.inputParameters.map(parameter => {
+      if (parameter['checked']) {
+        const value = parameter['value'];
+        ipParameter[parameter['label']] = parameter['type_value'] === 'number' ? +value : value;
+      }
+    });
+    this.calledModel$ = this.ms.callModel(ipParameter)
+    .subscribe(data => {
+      console.log(data);
+      this.resultCSV = data['resultCSV'];
+      this.headerCSV = this.resultCSV['0'].split(', ');
+      const lines = this.resultCSV.slice(1);
+      this.linesCSV = lines.map(line => line.split(', '));
+    });
+  }
+
+  getInputParameters(): any {
+    this.inputParameters$ = this.ms.getInputParameters(this.selectedVsystem, this.selectedVappsystem)
+    .subscribe(data => {
+      this.inputParameters = data['input_parameters'];
+      this.inputParameters.map(parameter => {parameter['checked'] = true; });
     });
   }
 }

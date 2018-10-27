@@ -3,38 +3,80 @@
     <div class="card-header" id="headingOne">
       <h5 class="mb-0">
         <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          MODEL DEFINITION
+          SYSTEM DEFINTION
         </button>
-        <button class="btn btn-primary pull-right" (click)="callPredictionModel()">CALL</button>
+        <button class="btn btn-primary pull-right" (click)="getInputParameters()">GET INPUTS</button>
       </h5>
     </div>
-
     <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
       <div class="model-body">
         <div class="form-group">
           <div class="form-group row">
-            <div class="col-sm-4 center"><i class="fas fa-cogs"></i><label class="model-dropdown">Model</label></div>
+            <div class="col-sm-4 center"><i class="fas fa-cogs"></i><label class="model-dropdown">System</label></div>
             <div class="col-sm-8 pull-right">
-              <select  class="form-control" [(ngModel)]='selectedModel'>
-                  <option *ngFor="let model of models" [ngValue]='model'>
-                      {{ model.name }}
+              <select  class="form-control" [(ngModel)]='selectedSystem'>
+                  <option *ngFor="let system of systems" [ngValue]='system'>
+                      {{ system.name }}
                   </option>
               </select>
             </div>
           </div>
+          <div class="form-group row" *ngIf="selectedSystem">
+            <div class="col-sm-4 center"><i class="fas fa-bezier-curve"></i><label class="model-dropdown">Version System</label></div>
+            <div class="col-sm-8 pull-right">
+              <select  class="form-control" [(ngModel)]='selectedVsystem'>
+                  <option *ngFor="let vsystem of selectedSystem.vsystems" [ngValue]='vsystem'>
+                      {{ vsystem.version }}
+                  </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row" *ngIf="selectedVsystem">
+            <div class="col-sm-4 center"><i class="fas fa-cog"></i><label class="model-dropdown">Application System</label></div>
+            <div class="col-sm-8 pull-right">
+              <select  class="form-control" [(ngModel)]='selectedAppSystem'>
+                  <option *ngFor="let appsystem of selectedSystem.appsystems" [ngValue]='appsystem'>
+                      {{ appsystem.name }}
+                  </option>
+              </select>
+            </div>
+          </div>  
+          <div class="form-group row" *ngIf="selectedAppSystem">
+            <div class="col-sm-4 center"><i class="fas fa-code-branch"></i><label class="model-dropdown">Application System Version</label></div>
+            <div class="col-sm-8 pull-right">
+              <select  class="form-control" [(ngModel)]='selectedVappsystem'>
+                  <option *ngFor="let vappsystem of selectedAppSystem.vappsystems" [ngValue]='vappsystem'>
+                      {{ vappsystem.version }}
+                  </option>
+              </select>
+            </div>
+          </div>  
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          INPUT PARAMETERS
+        </button>
+        <button class="btn btn-primary pull-right" (click)="callModel()">CALL</button>
+      </h5>
+    </div>
+
+    <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="model-body">
         <i class="fas fa-sliders-h"></i><label class="large-text">Parameters</label>
-        <div *ngIf="selectedModel">
-          <div *ngFor="let parameter of selectedModel.parameters">
-            <div class="form-group row">
-              <div class="col-sm-4"><label class="pull-right">{{ parameter.name }}</label></div>
-              <div class="col-sm-8 pull-right">
-                <select  class="form-control inline" [(ngModel)]='parameter.selectedValue'>
-                    <option *ngFor="let value of parameter.values" [ngValue]='value'>
-                        {{ value.value }}
-                    </option>
-                </select>
-              </div>
+        <div>
+          <div *ngFor="let inputParameter of inputParameters">
+            <div class="row">
+              <div class="col-sm-2"></div>
+              <div class="col-sm-1"><input type="checkbox" class="form-check-input pull-right" [(ngModel)]='inputParameter.checked'></div>
+              <div class="col-sm-6"><label>{{ inputParameter.label }}</label></div>
+              <div class="col-sm-3 pull-right"> {{ inputParameter.value }}</div>
             </div>
           </div>
         </div>
@@ -49,16 +91,13 @@
         </button>
       </h5>
     </div>
-    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
-      <div class="card-body">
-        <img class="image-center" *ngIf="resultImageBase64Path" [src]="resultImageBase64Path" alt="">
-      </div>
-      <div class="card-body">
+    <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+      <div class="model-body">
         <table class="table table-striped">
           <thead>
             <tr>
               <th scope="col" *ngFor="let item of headerCSV">{{ item }}</th>
-            </tr>
+            </tr>            
           </thead>
           <tbody>
             <tr *ngFor="let line of linesCSV">
