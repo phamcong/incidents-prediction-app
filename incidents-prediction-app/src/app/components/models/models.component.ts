@@ -87,7 +87,6 @@ export class ModelsComponent implements OnInit {
     this.inputParameters$ = this.ms.getInputParameters(this.selectedVsystem, this.selectedVappsystem)
     .subscribe(data => {
       this.inputParameters = data['input_parameters'];
-      this.inputParameters.map(parameter => {parameter['checked'] = true; });
     });
   }
 }

@@ -73,8 +73,7 @@
         <div>
           <div *ngFor="let inputParameter of inputParameters">
             <div class="row">
-              <div class="col-sm-2"></div>
-              <div class="col-sm-1"><input type="checkbox" class="form-check-input pull-right" [(ngModel)]='inputParameter.checked'></div>
+              <div class="col-sm-3"></div>
               <div class="col-sm-6"><label>{{ inputParameter.label }}</label></div>
               <div class="col-sm-3 pull-right"> {{ inputParameter.value }}</div>
             </div>
