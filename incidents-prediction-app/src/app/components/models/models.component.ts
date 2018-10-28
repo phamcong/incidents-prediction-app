@@ -68,10 +68,8 @@ export class ModelsComponent implements OnInit {
   callModel() {
     const ipParameter = {}
     this.inputParameters.map(parameter => {
-      if (parameter['checked']) {
-        const value = parameter['value'];
-        ipParameter[parameter['label']] = parameter['type_value'] === 'number' ? +value : value;
-      }
+      const value = parameter['value'];
+      ipParameter[parameter['label']] = parameter['type_value'] === 'number' ? +value : value;
     });
     this.calledModel$ = this.ms.callModel(ipParameter)
     .subscribe(data => {
